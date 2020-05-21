@@ -33,13 +33,19 @@ export async function createTodo(
 
 export async function updateTodo(
   updateTodoRequest: UpdateTodoRequest,
-  jwtToken: string
+  jwtToken: string,
+  todoId: string
 ): Promise<string> {
   const userId = parseUserId(jwtToken)
 
-  return await todoAccess.updateTodo(updateTodoRequest, userId)
+  return await todoAccess.updateTodo(updateTodoRequest, userId, todoId)
 }
 
-export async function deleteTodo(todoId: string): Promise<string> {
-  return await todoAccess.deleteTodo(todoId)
+export async function deleteTodo(
+  jwtToken: string,
+  todoId: string
+): Promise<string> {
+  const userId = parseUserId(jwtToken)
+
+  return await todoAccess.deleteTodo(userId, todoId)
 }
