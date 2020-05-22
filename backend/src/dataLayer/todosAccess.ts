@@ -101,6 +101,35 @@ export class TodoAccess {
     return 'Successfully updated'
   }
 
+  async updateAttachmentUrl(userId: string, todoId: string): Promise<string> {
+    logger.info('Getting the todoItem for the ID: ', todoId)
+
+    const todo = await this.getTodo(userId, todoId)
+
+    logger.info('Updating the attachmentUrl for the ID: ', todoId)
+
+    const updatedTodo = await this.docClient
+      .update({
+        TableName: this.todosTable,
+        Key: {
+          userId: userId,
+          createdAt: todo.createdAt
+        },
+        UpdateExpression: 'set attachmentUrl = :attachmentUrl',
+        ConditionExpression: 'todoId = :todoId',
+        ExpressionAttributeValues: {
+          ':attachmentUrl': todoId,
+          ':todoId': todoId
+        },
+        ReturnValues: 'UPDATED_NEW'
+      })
+      .promise()
+
+    logger.info('Updated Todo ', updatedTodo)
+
+    return 'Successfully updated'
+  }
+
   async deleteTodo(userId: string, todoId: string): Promise<string> {
     logger.info('Getting the todoItem for the ID: ', todoId)
 
